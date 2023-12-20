@@ -1,0 +1,33 @@
+:root {
+  --spacing: 0.5em;
+  --primary-color: rgb(46, 118, 255);
+  --dark-color: rgb(32, 82, 178);
+  --secondary-color: rgb(32, 82, 178);
+  --light-color: white;
+}
+
+body {
+  height: auto;
+  width: 200px;
+  padding: var(--spacing);
+  font: 0.8rem 'Fira Sans', sans-serif;
+}
+
+.radioGroup {
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+}
+
+legend {
+  background-color: var(--primary-color);
+  color: var(--light-color);
+  padding: 3px 6px;
+}
+
+fieldset {
+  margin: 0;
+}
+
+input[type='radio'] {
+  margin: var(--spacing);
+}

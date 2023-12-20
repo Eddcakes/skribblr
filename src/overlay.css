@@ -1,0 +1,11 @@
+button#quick-screenshot {
+  all: unset;
+  position: fixed;
+  background-color: #fff;
+  top: 5;
+  right: 5;
+  color: #000;
+  border-radius: 5px;
+  padding: 8px;
+  cursor: pointer;
+}

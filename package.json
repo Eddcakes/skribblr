@@ -1,0 +1,23 @@
+{
+  "name": "skribblr",
+  "version": "1.0.0",
+  "description": "Chrome extension",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.4.7",
+    "@types/chrome": "^0.0.163"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "jest-environment-node"
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ]
+}

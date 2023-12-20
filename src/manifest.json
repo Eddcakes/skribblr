@@ -1,0 +1,31 @@
+{
+  "name": "skribblr",
+  "version": "0.0.0.1",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "description": "Automatically take screenshots of skribbl.io drawings",
+  "permissions": ["tabs", "activeTab", "scripting", "storage"],
+  "host_permissions": ["https://skribbl.io/*", "<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {}
+  },
+  "content_scripts": [
+    {
+      "css": ["overlay.css"],
+      "js": ["content.js"],
+      "matches": ["https://skribbl.io/*"]
+    }
+  ],
+  "commands": {
+    "takeScreenshot": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1"
+      },
+      "description": "Screenshot skribbl game window"
+    }
+  }
+}
