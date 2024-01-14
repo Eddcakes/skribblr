@@ -15,7 +15,6 @@ chrome.runtime.onMessage.addListener(async (msg, sender) => {
       setFileNameFormat(msg.value);
       break;
     case "takeScreenshot":
-      console.log("capture screenshot");
       captureScreenshot();
       break;
     default:
@@ -40,12 +39,6 @@ function setFileNameFormat(value) {
   chrome.storage.sync.set({ fileNameFormat: value });
   chrome.storage.sync.get("fileNameFormat", (val) => {
     sendTabMessage({ type: "nameFormat", value: val });
-  });
-}
-
-function getFileNameFormat() {
-  chrome.storage.sync.get("fileNameFormat", (val) => {
-    return val;
   });
 }
 

@@ -5,7 +5,6 @@ if (typeof init === "undefined") {
     initialiseScreenshotButton();
     initialiseClockObserver();
     initialisePlayerListObserver();
-    initialiseRoundObserver();
   };
   init();
 }
@@ -77,13 +76,17 @@ function initialiseClockObserver() {
         // when it ticks
         const time = Number(mutation?.addedNodes?.[0]?.data);
         if (isNaN(time)) {
-          console.log("not a number");
+          console.log("Cannot find time");
           return;
+        }
+        // reset timerScreenshotTaken if we are waiting for a new round
+        if (time > 30 && getScreenshotTaken()) {
+          currentStatus.timerScreenshotTaken = false;
         }
         if (time < 3 && !getScreenshotTaken()) {
           if (shouldTakeScreenshot()) {
             {
-              console.log("Requesting screenshot on countdown");
+              console.log("Requesting screenshot on time running out");
               requestScreenshot();
               setScreenshotTaken();
             }
@@ -125,27 +128,6 @@ function initialisePlayerListObserver() {
   observer.observe(playersList, config);
 }
 
-// currently not doing what i expected
-// need to reset timerScreenshotTaken when a new drawer is chosen/new round starts
-function initialiseRoundObserver() {
-  const round = document.querySelector("#game-round");
-  const config = { attributes: true, childList: false, subtree: true };
-  const callback = (mutationList, observer) => {
-    for (const mutation of mutationList) {
-      if (mutation.type === "attributes") {
-        // TODO
-        console.log("round changed");
-        // reset timerScreenshotTaken if we are waiting for a new round
-        // this will run many times which is annoying, fix later
-        // currentStatus.timerScreenshotTaken = false;
-        // currentStatus.round = document.querySelector("#game-round").innerText;
-      }
-    }
-  };
-  const observer = new MutationObserver(callback);
-  observer.observe(round, config);
-}
-
 function shouldTakeScreenshot() {
   const waiting = "WAITING";
   const gameStatus = document.querySelector(
@@ -170,36 +152,30 @@ function setScreenshotTaken() {
 // refactor this to be more readable (helper functions)
 function createFileName() {
   let fileName = "";
-  let found = false;
+  let inGame = false;
   const drawingElements = document.querySelectorAll(".drawing");
   drawingElements.forEach((element) => {
     if (element.style.display === "block") {
-      found = true;
+      inGame = true;
       // .closest can let us search parents
       const player = element.closest(".player");
       let playerName = player.querySelector(".player-name").innerText;
-      // this can go
-      // sanitize the name
-
-      // todo: fix not replacing (You))
-      playerName.replace(" (You)", "");
-      playerName.replace(" ", "_");
+      playerName = playerName.replace(" (You)", "");
+      playerName = playerName.replace(" ", "_");
       // whitelist
       const whitelist = /[^a-z0-9\-]/gi;
-      playerName.replace(whitelist, "");
-      const artist = playerName;
-      fileName += artist;
+      playerName = playerName.replace(whitelist, "");
+      fileName += playerName;
     }
   });
-  if (!found) {
+  if (!inGame) {
     // no one is drawing
     fileName = "general";
   }
   // word
   let word = "";
   // hints and draw this do not get overwritten if you change role, so we need to check role
-  const artist = "DRAW THIS";
-  // const guesser = "GUESS THIS";
+  const artist = "DRAW THIS"; // or "GUESS THIS" for guesser
   const descriptionSelector = "#game-word .description";
   const hintsSelector = "#game-word .hints .container";
   const wordDescription = document.querySelector(descriptionSelector).innerText;
